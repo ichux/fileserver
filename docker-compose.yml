@@ -1,0 +1,47 @@
+name: fileserver
+
+x-the-logging: &the-logging
+  driver: "json-file"
+  options:
+    max-file: 5
+    max-size: 10m
+
+services:
+  if_file_hold: &if_file_hold
+    build:
+      context: ./containers/proxy
+      dockerfile: app.Dockerfile
+      args:
+        PC_USER: ${PC_USER}
+    restart: always
+    container_name: cf_file_hold
+    command: tail -f /dev/null
+    logging: *the-logging
+    env_file:
+      - .env
+    volumes:
+      - ./containers/proxy:/apps
+      - ${HOME}/offloads:${HOME}/offloads
+
+  if_file_web:
+    <<: *if_file_hold
+    container_name: cf_file_web
+    command: ./runner.sh app
+    logging: *the-logging
+
+  if_file_server:
+    image: piccl_nginx:latest
+    restart: always
+    container_name: cf_file_server
+    command: nginx -g 'daemon off;'
+    depends_on:
+      - if_file_web
+    ports:
+      - "16000:80"
+    logging: *the-logging
+    env_file:
+      - .env
+    volumes:
+      - ./containers/nginx/conf.d:/etc/nginx/conf.d
+      - ./containers/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ${HOME}/offloads:/usr/share/nginx/files
