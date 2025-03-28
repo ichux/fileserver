@@ -3,7 +3,7 @@ import sqlite3
 from contextlib import contextmanager
 
 import bcrypt
-from apps import DB_LOCATION, logger
+from apps import engine, logger
 
 parser = argparse.ArgumentParser(
     description="Manage users in the file server auth system."
@@ -30,7 +30,7 @@ args = parser.parse_args()
 
 @contextmanager
 def get_db_connection():
-    conn = sqlite3.connect(DB_LOCATION)
+    conn = sqlite3.connect(engine.url.render_as_string(hide_password=False))
     cursor_ = conn.cursor()
     try:
         yield cursor_

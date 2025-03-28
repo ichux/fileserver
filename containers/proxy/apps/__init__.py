@@ -14,10 +14,8 @@ TOKEN_EXPIRY_MINUTES = int(os.getenv("TOKEN_EXPIRY_MINUTES"))
 UPLOAD_DIR = Path("~/offloads").expanduser()
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-DB_LOCATION = str(UPLOAD_DIR / ".fs_auth.db")
-DATABASE_URL = f"sqlite:///{DB_LOCATION}"
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(f"sqlite:///{UPLOAD_DIR / ".fs_auth.db"}")
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
