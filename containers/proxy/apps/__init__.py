@@ -15,7 +15,7 @@ UPLOAD_DIR = Path("~/offloads").expanduser()
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 
-engine = create_engine(f"sqlite:///{UPLOAD_DIR / ".fs_auth.db"}")
+engine = create_engine(f"sqlite:///{UPLOAD_DIR / '.fs_auth.db'}")
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 

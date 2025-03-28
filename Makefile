@@ -60,15 +60,15 @@ n2x:
 .PHONY: ex
 # help: ex				- show examples of how to use make up ...
 ex:
-	@echo "make up t='username secret_password'"
-	@echo "make up t='username secret_password --update-password new_password'"
-	@echo "make up t='username secret_password --enabled False'"
-	@echo "make up t='username secret_password --update-password new_password --enabled True'"
+	@echo make up t="'add username --password secret_password'"
+	@echo make up t="'add username'"
+	@echo make up t="'add username --disabled'"
+	@echo make up t="'edit username --password new_secret_password --enable'"
 
 .PHONY: up
 # help: up				- add username and password: type `make ex` for examples
 up:
-	@docker exec -it cf_file_hold python3 add_users.py $(t)
+	@docker exec -it cf_file_hold python3 manage_users.py $(t)
 
 .PHONY: mv
 # help: mv				- move to server
